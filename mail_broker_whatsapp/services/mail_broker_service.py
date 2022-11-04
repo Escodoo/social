@@ -45,6 +45,7 @@ class MailBrokerWhatsappService(Component):
             return None
         self.collection.env = self.env(user=bot_data["webhook_user_id"])
         broker = self.env["mail.broker"].browse(bot_data["id"])
+        _logger.error(kwargs)
         if kwargs.get("hub").get("verify_token") != broker.whatsapp_security_key:
             return None
         broker.sudo().integrated_webhook_state = "integrated"
