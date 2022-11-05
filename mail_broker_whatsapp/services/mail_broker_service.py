@@ -78,6 +78,7 @@ class MailBrokerWhatsappService(Component):
                 for change in entry["changes"]:
                     if change["field"] != "messages":
                         continue
+                    _logger.error(message)
                     for message in change["value"].get("messages", []):
                         chat = self._get_channel(
                             broker, message["from"], change["value"], force_create=True
