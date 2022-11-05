@@ -2,7 +2,9 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo.addons.base_rest import restapi
 from odoo.addons.component.core import AbstractComponent
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class BrokerMethodParams(restapi.RestMethodParam):
     # def __init__(self, cls: BaseModel):
@@ -49,6 +51,8 @@ class MailBrokerService(AbstractComponent):
     )
     def post_update(self, token, **kwargs):
         """Post an update from an external service"""
+        _logger.error(kwargs)
+        _logger.error(token)
         bot_data = self.env["mail.broker"]._get_broker(
             token, broker_type=self._usage, state="integrated", **kwargs
         )
