@@ -73,6 +73,7 @@ class MailBrokerWhatsappService(Component):
         return True
 
     def _receive_update(self, broker, update):
+        _logger.error(update)
         if update:
             for entry in update["entry"]:
                 for change in entry["changes"]:
