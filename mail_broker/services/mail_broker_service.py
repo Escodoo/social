@@ -57,6 +57,7 @@ class MailBrokerService(AbstractComponent):
             token, broker_type=self._usage, state="integrated", **kwargs
         )
         _logger.error(bot_data)
+        _logger.error("HEIM")
         if not bot_data:
             return {}
         if not self._verify_update(bot_data, kwargs):
