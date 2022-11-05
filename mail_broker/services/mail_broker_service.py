@@ -52,10 +52,11 @@ class MailBrokerService(AbstractComponent):
     def post_update(self, token, **kwargs):
         """Post an update from an external service"""
         _logger.error(kwargs)
-        _logger.error(token)
+
         bot_data = self.env["mail.broker"]._get_broker(
             token, broker_type=self._usage, state="integrated", **kwargs
         )
+        _logger.error(bot_data)
         if not bot_data:
             return {}
         if not self._verify_update(bot_data, kwargs):
@@ -63,9 +64,11 @@ class MailBrokerService(AbstractComponent):
         self.collection.env = self.env(user=bot_data["webhook_user_id"])
         broker = self.env["mail.broker"].browse(bot_data["id"])
         self._receive_update(broker.with_context(notify_broker=True), kwargs)
+        _logger.error("passou 123")
         return False
 
     def _verify_update(self, bot_data, kwargs):
+        _logger.error("passou 432")
         return True
 
     def _receive_update(self, broker, kwargs):
