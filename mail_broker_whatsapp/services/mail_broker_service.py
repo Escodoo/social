@@ -60,6 +60,7 @@ class MailBrokerWhatsappService(Component):
         signature = request.httprequest.headers.get("x-hub-signature-256")
         _logger.error("============================")
         _logger.error(signature)
+        _logger.error(bot_data["webhook_secret"])
         if not signature:
             return False
         if (
