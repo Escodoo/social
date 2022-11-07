@@ -62,6 +62,7 @@ class MailBrokerService(AbstractComponent):
             return {}
         if not self._verify_update(bot_data, kwargs):
             return {}
+        _logger.error("passou 2222")
         self.collection.env = self.env(user=bot_data["webhook_user_id"])
         broker = self.env["mail.broker"].browse(bot_data["id"])
         self._receive_update(broker.with_context(notify_broker=True), kwargs)
@@ -69,7 +70,6 @@ class MailBrokerService(AbstractComponent):
         return False
 
     def _verify_update(self, bot_data, kwargs):
-        _logger.error("ESC: passou 432")
         return True
 
     def _receive_update(self, broker, kwargs):

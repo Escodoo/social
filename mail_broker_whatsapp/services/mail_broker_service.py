@@ -63,7 +63,7 @@ class MailBrokerWhatsappService(Component):
         _logger.error(bot_data["webhook_secret"])
         _logger.error(("sha256=%s" % hmac.new(bot_data["webhook_secret"].encode(), request.httprequest.data,hashlib.sha256,).hexdigest()))
         if not signature:
-            return False
+            return True
         if (
             "sha256=%s"
             % hmac.new(
