@@ -113,5 +113,6 @@ odoo.define("mail_broker.BrokerThread", function (require) {
             });
         },
     });
+    debugger;
     return BrokerThread;
 });
