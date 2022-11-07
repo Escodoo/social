@@ -13,6 +13,9 @@
             <script type="text/javascript" src="/mail_broker/static/src/js/thread.js" />
             <script type="text/javascript" src="/mail_broker/static/src/js/broker.js" />
             <link rel="stylesheet" href="/mail_broker/static/src/scss/broker.scss" />
+            <script type="text/javascript" src="/mail_broker/static/src/components/discuss/discuss.js"></script>
+            <script type="text/javascript" src="/mail_broker/static/src/components/discuss_sidebar/discuss_sidebar.js"></script>
+            <script type="text/javascript" src="/mail_broker/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js"></script>
         </xpath>
     </template>
 </odoo>
