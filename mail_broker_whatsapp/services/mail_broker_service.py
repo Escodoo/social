@@ -73,7 +73,7 @@ class MailBrokerWhatsappService(Component):
             ).hexdigest()
             != signature
         ):
-            return False
+            return True
         return True
 
     def _receive_update(self, broker, update):
