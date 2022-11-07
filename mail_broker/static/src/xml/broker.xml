@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-<!--    <t t-extend="mail.widget.Thread.Message">-->
-<!--        <t t-jquery=".o_mail_info" t-operation="append">-->
-<!--            <span-->
-<!--                t-if="message.broker_type"-->
-<!--                class="o_thread_tooltip_broker_container"-->
-<!--            />-->
-<!--        </t>-->
-<!--    </t>-->
-<!--    <t t-name="mail_broker.broker">-->
-<!--        <div class="o_mail_discuss">-->
-<!--            <div class="o_mail_discuss_sidebar" />-->
-<!--            <div class="o_mail_discuss_content">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </t>-->
-<!--    <t t-name="mail_broker.broker.Sidebar">-->
-<!--        <div class="o_mail_discuss_sidebar">-->
-<!--            <t t-foreach="bots" t-as="bot_key">-->
-<!--                <t t-set="type">broker_thread</t>-->
-<!--                <t t-set="bot" t-value="bots[bot_key]" />-->
-<!--                <t t-set="channels" t-value="bot.threads" />-->
-<!--                <t t-call="mail.broker.discuss.SidebarTitle">-->
-<!--                    <t t-set="title" t-value="bot.name" />-->
-<!--                    <t t-set="icon" t-value="fa-users" />-->
-<!--                </t>-->
-<!--                <t t-call="mail.broker.discuss.SidebarItems">-->
-<!--                    <t t-set="displayHash" t-value="false" />-->
-<!--                    <t t-set="inputPlaceholder">Search a chat</t>-->
-<!--                </t>-->
-<!--            </t>-->
-<!--        </div>-->
-<!--    </t>-->
+    <t t-extend="mail.widget.Thread.Message">
+        <t t-jquery=".o_mail_info" t-operation="append">
+            <span
+                t-if="message.broker_type"
+                class="o_thread_tooltip_broker_container"
+            />
+        </t>
+    </t>
+    <t t-name="mail_broker.broker">
+        <div class="o_mail_discuss">
+            <div class="o_mail_discuss_sidebar" />
+            <div class="o_mail_discuss_content">
+            </div>
+        </div>
+    </t>
+    <t t-name="mail_broker.broker.Sidebar">
+        <div class="o_mail_discuss_sidebar">
+            <t t-foreach="bots" t-as="bot_key">
+                <t t-set="type">broker_thread</t>
+                <t t-set="bot" t-value="bots[bot_key]" />
+                <t t-set="channels" t-value="bot.threads" />
+                <t t-call="mail.broker.discuss.SidebarTitle">
+                    <t t-set="title" t-value="bot.name" />
+                    <t t-set="icon" t-value="fa-users" />
+                </t>
+                <t t-call="mail.broker.discuss.SidebarItems">
+                    <t t-set="displayHash" t-value="false" />
+                    <t t-set="inputPlaceholder">Search a chat</t>
+                </t>
+            </t>
+        </div>
+    </t>
 <!--    <t t-name="mail.broker.discuss.SidebarTitle" t-extend="mail.discuss.SidebarTitle">-->
 <!--        <t t-jquery=".o_add" t-operation="attributes">-->
 <!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->
@@ -45,29 +45,5 @@
 <!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->
 <!--        </t>-->
 <!--    </t>-->
-
-<!--    <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">-->
-<!--        <xpath expr="//*[@name='root']" position="inside">-->
-<!--            <t t-set="Broker Channels" t-value="quickSearchOrderedAndPinnedLivechatList()"/>-->
-<!--            <t t-if="livechats and livechats.length">-->
-<!--                <div class="o_DiscussSidebar_group o_DiscussSidebar_groupLivechat">-->
-<!--                    <div class="o_DiscussSidebar_groupHeader">-->
-<!--                        <div class="o_DiscussSidebar_groupHeaderItem o_DiscussSidebar_groupTitle">-->
-<!--                            Livechat-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="o_DiscussSidebar_list">-->
-<!--                        <t t-foreach="livechats" t-as="livechat" t-key="livechat.localId">-->
-<!--                            <DiscussSidebarItem-->
-<!--                                class="o_DiscussSidebar_item"-->
-<!--                                threadLocalId="livechat.localId"-->
-<!--                            />-->
-<!--                        </t>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </t>-->
-<!--        </xpath>-->
-<!--    </t>-->
-
 
 </templates>

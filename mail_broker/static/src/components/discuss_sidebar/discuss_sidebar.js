@@ -40,7 +40,6 @@ patch(components.DiscussSidebar, 'mail_broker/static/src/components/discuss_side
                 }
                 return c2.id - c1.id;
             });
-            debugger;
         if (!this.discuss.sidebarQuickSearchValue) {
             return allOrderedAndPinnedBrokerChannels;
         }
