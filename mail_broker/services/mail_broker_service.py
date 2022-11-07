@@ -59,8 +59,10 @@ class MailBrokerService(AbstractComponent):
         _logger.error(bot_data)
         _logger.error("HEIM")
         if not bot_data:
+            _logger.error("ESC: not bot_data")
             return {}
         if not self._verify_update(bot_data, kwargs):
+            _logger.error("ESC: not self._verify_update(bot_data, kwargs)")
             return {}
         self.collection.env = self.env(user=bot_data["webhook_user_id"])
         broker = self.env["mail.broker"].browse(bot_data["id"])
