@@ -58,6 +58,8 @@ class MailBrokerWhatsappService(Component):
 
     def _verify_update(self, bot_data, kwargs):
         signature = request.httprequest.headers.get("x-hub-signature-256")
+        _logger.error("============================")
+        _logger.error(signature)
         if not signature:
             return False
         if (
