@@ -1,3 +1,5 @@
-# generated from manifests external_dependencies
-extract_msg
 premailer
+extract-msg
+python-telegram-bot
+cairosvg
+lottie
