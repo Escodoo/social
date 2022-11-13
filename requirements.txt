@@ -1,5 +1,7 @@
-premailer
-extract-msg
-python-telegram-bot
+# generated from manifests external_dependencies
 cairosvg
+extract_msg
 lottie
+premailer
+python-telegram-bot<=13.11
+requests_toolbelt

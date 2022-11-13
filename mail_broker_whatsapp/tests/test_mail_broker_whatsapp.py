@@ -119,7 +119,9 @@ class TestMailBrokerTelegram(MailBrokerComponentRegistryTestCase):
             req.headers = {
                 "x-hub-signature-256": "sha256=%s"
                 % hmac.new(
-                    self.broker.webhook_secret.encode(), req.data, hashlib.sha256,
+                    self.broker.webhook_secret.encode(),
+                    req.data,
+                    hashlib.sha256,
                 ).hexdigest()
             }
         http._request_stack.push(HttpRequest(req))
@@ -156,7 +158,9 @@ class TestMailBrokerTelegram(MailBrokerComponentRegistryTestCase):
         req.headers = {
             "x-hub-signature-256": "sha256=1234%s"
             % hmac.new(
-                self.broker.webhook_secret.encode(), req.data, hashlib.sha256,
+                self.broker.webhook_secret.encode(),
+                req.data,
+                hashlib.sha256,
             ).hexdigest()
         }
         http._request_stack.push(HttpRequest(req))

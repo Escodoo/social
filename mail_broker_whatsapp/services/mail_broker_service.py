@@ -245,7 +245,7 @@ class MailBrokerWhatsappService(Component):
                 )
 
                 response = requests.post(
-                    "https://graph.facebook.com/v13.0/%s/media"
+                    "https://graph.facebook.com/v15.0/%s/media"
                     % self.collection.whatsapp_from_phone,
                     headers={
                         "Authorization": "Bearer %s" % self.collection.token,
@@ -255,7 +255,7 @@ class MailBrokerWhatsappService(Component):
                 )
                 response.raise_for_status()
                 response = requests.post(
-                    "https://graph.facebook.com/v13.0/%s/messages"
+                    "https://graph.facebook.com/v15.0/%s/messages"
                     % self.collection.whatsapp_from_phone,
                     headers={"Authorization": "Bearer %s" % self.collection.token},
                     json=self._send_payload(

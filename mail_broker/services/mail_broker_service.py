@@ -11,11 +11,17 @@ class BrokerMethodParams(restapi.RestMethodParam):
     def to_response(self, service, result):
         return result
 
-    def to_openapi_requestbody(self, service):
+    def to_openapi_requestbody(self, service, spec):
         return {"content": {}}
 
-    def to_openapi_responses(self, service):
+    def to_openapi_responses(self, service, spec):
         return {"200": {"content": {}}}
+
+    def to_openapi_query_parameters(self, service, spec):
+        return {}
+
+    def to_json_schema(self, service, spec, direction):
+        return spec
 
 
 class MailBrokerService(AbstractComponent):
@@ -27,7 +33,7 @@ class MailBrokerService(AbstractComponent):
 
     @restapi.method(
         [(["/<string:bot_key>/update"], "POST")],
-        # output_param=BrokerMethodParams(),
+        output_param=BrokerMethodParams(),
         input_param=BrokerMethodParams(),
         auth="none",
     )

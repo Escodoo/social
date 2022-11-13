@@ -32,17 +32,17 @@
             </t>
         </div>
     </t>
-    <t t-name="mail.broker.discuss.SidebarTitle" t-extend="mail.discuss.SidebarTitle">
-        <t t-jquery=".o_add" t-operation="attributes">
-            <attribute name="t-attf-data-bot">#{bot_key}</attribute>
-        </t>
-    </t>
-    <t t-name="mail.broker.discuss.SidebarItems" t-extend="mail.discuss.SidebarItems">
-        <t t-jquery=".o_mail_add_thread" t-operation="attributes">
-            <attribute name="t-attf-data-bot">#{bot_key}</attribute>
-        </t>
-        <t t-jquery=".o_input" t-operation="attributes">
-            <attribute name="t-attf-data-bot">#{bot_key}</attribute>
-        </t>
-    </t>
+<!--    <t t-name="mail.broker.discuss.SidebarTitle" t-extend="mail.discuss.SidebarTitle">-->
+<!--        <t t-jquery=".o_add" t-operation="attributes">-->
+<!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->
+<!--        </t>-->
+<!--    </t>-->
+<!--    <t t-name="mail.broker.discuss.SidebarItems" t-extend="mail.discuss.SidebarItems">-->
+<!--        <t t-jquery=".o_mail_add_thread" t-operation="attributes">-->
+<!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->
+<!--        </t>-->
+<!--        <t t-jquery=".o_input" t-operation="attributes">-->
+<!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->
+<!--        </t>-->
+<!--    </t>-->
 </templates>
