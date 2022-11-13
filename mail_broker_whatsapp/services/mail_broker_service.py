@@ -54,6 +54,7 @@ class MailBrokerWhatsappService(Component):
 
     def _set_webhook(self):
         self.collection.integrated_webhook_state = "pending"
+        self.collection.integrated_webhook_state = "integrated"
 
     def _verify_update(self, bot_data, kwargs):
         signature = request.httprequest.headers.get("x-hub-signature-256")

@@ -17,6 +17,12 @@ class BrokerMethodParams(restapi.RestMethodParam):
     def to_openapi_responses(self, service):
         return {"200": {"content": {}}}
 
+    def to_openapi_query_parameters(self, service, params):
+        return params
+
+    def to_json_schema(self, service, spec, direction):
+        return spec
+
 
 class MailBrokerService(AbstractComponent):
     _inherit = "base.rest.service"

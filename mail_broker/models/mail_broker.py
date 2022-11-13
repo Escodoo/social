@@ -10,7 +10,7 @@ class MailBroker(models.Model):
 
     name = fields.Char(required=True)
     token = fields.Char(required=True)
-    broker_type = fields.Selection([], required=True)
+    broker_type = fields.Selection([])
     show_on_app = fields.Boolean(default=True)
     webhook_key = fields.Char()
     webhook_secret = fields.Char()
