@@ -9,14 +9,14 @@
         </t>
     </t>
     <t t-name="mail_broker.broker">
-        <div class="o_mail_discuss">
-            <div class="o_mail_discuss_sidebar" />
-            <div class="o_mail_discuss_content">
+        <div class="o_Discuss">
+            <div class="o_DiscussSidebar" />
+            <div class="o_Discuss_content">
             </div>
         </div>
     </t>
     <t t-name="mail_broker.broker.Sidebar">
-        <div class="o_mail_discuss_sidebar">
+        <div class="o_Discuss_sidebar">
             <t t-foreach="bots" t-as="bot_key">
                 <t t-set="type">broker_thread</t>
                 <t t-set="bot" t-value="bots[bot_key]" />
@@ -25,18 +25,29 @@
                     <t t-set="title" t-value="bot.name" />
                     <t t-set="icon" t-value="fa-users" />
                 </t>
-                <t t-call="mail.broker.discuss.SidebarItems">
-                    <t t-set="displayHash" t-value="false" />
-                    <t t-set="inputPlaceholder">Search a chat</t>
-                </t>
+<!--                <t t-call="mail.broker.discuss.SidebarItems">-->
+<!--                    <t t-set="displayHash" t-value="false" />-->
+<!--                    <t t-set="inputPlaceholder">Search a chat</t>-->
+<!--                </t>-->
             </t>
         </div>
     </t>
-<!--    <t t-name="mail.broker.discuss.SidebarTitle" t-extend="mail.discuss.SidebarTitle">-->
-<!--        <t t-jquery=".o_add" t-operation="attributes">-->
-<!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->
-<!--        </t>-->
-<!--    </t>-->
+    <t
+        t-name="mail.broker.discuss.SidebarTitle"
+        t-inherit="mail.DiscussSidebarItem"
+        t-inherit-mode="extension"
+    >
+
+        <xpath
+            expr="//div[hasclass('o_DiscussSidebarItem_commands')]/t[1]"
+            position="attributes"
+        >
+            <attribute name="t-attf-data-bot">
+                #{bot_key}
+            </attribute>
+        </xpath>
+    </t>
+
 <!--    <t t-name="mail.broker.discuss.SidebarItems" t-extend="mail.discuss.SidebarItems">-->
 <!--        <t t-jquery=".o_mail_add_thread" t-operation="attributes">-->
 <!--            <attribute name="t-attf-data-bot">#{bot_key}</attribute>-->

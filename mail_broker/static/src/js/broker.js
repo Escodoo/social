@@ -1,11 +1,11 @@
 odoo.define("mail_broker.Broker", function (require) {
     "use strict";
-    var BasicComposer = require("mail.composer.Basic");
-    var ExtendedComposer = require("mail.composer.Extended");
+    //    Var BasicComposer = require("mail.composer.Basic");
+    //    var ExtendedComposer = require("mail.composer.Extended");
     var core = require("web.core");
     var AbstractAction = require("web.AbstractAction");
     // Var ControlPanelMixin = require("web.ControlPanelMixin");
-    var ThreadWidget = require("mail.widget.Thread");
+    //    var ThreadWidget = require("mail.widget.Thread");
     var dom = require("web.dom");
 
     var QWeb = core.qweb;
@@ -56,188 +56,188 @@ odoo.define("mail_broker.Broker", function (require) {
                 ] = this._threadWidget.getScrolltop();
             }
         },
-        start: function () {
-            var self = this;
-
-            return this._super.apply(this, arguments).then(function () {
-                return self._initRender();
-            });
-            /*
-            Return this.alive($.when.apply($, defs))
-                .then(function() {
-                    if (self._defaultChatID) {
-                        return self.alive(self._setThread(self._defaultChatID));
-                    }
-                })
-
-                .then(function() {
-                    self._updateThreads();
-                    self._startListening();
-                    self._threadWidget.$el.on(
-                        "scroll",
-                        null,
-                        _.debounce(function() {
-                            var $noContent = self._threadWidget.$(".o_mail_no_content");
-                            if (
-                                self._threadWidget.getScrolltop() < 20 &&
-                                !self._thread.isAllHistoryLoaded() &&
-                                !$noContent.length
-                            ) {
-                                self._loadMoreMessages();
-                            }
-                            if (self._threadWidget.isAtBottom()) {
-                                self._thread.markAsRead();
-                            }
-                        }, 100)
-                    );
-                });
-            */
-        },
-        _initRender: function () {
-            var self = this;
-            this._basicComposer = new BasicComposer(this, {
-                mentionPartnersRestricted: true,
-            });
-            this._extendedComposer = new ExtendedComposer(this, {
-                mentionPartnersRestricted: true,
-            });
-            this._basicComposer
-                .on("post_message", this, this._onPostMessage)
-                .on("input_focused", this, this._onComposerFocused);
-            this._extendedComposer
-                .on("post_message", this, this._onPostMessage)
-                .on("input_focused", this, this._onComposerFocused);
-            this._renderButtons();
-
-            var defs = [];
-
-            defs.push(this._renderThread());
-            defs.push(this._basicComposer.appendTo(this.$(".o_mail_discuss_content")));
-            return Promise.all(defs)
-                .then(function () {
-                    if (self._defaultChatID) {
-                        return self._setThread(self._defaultChatID);
-                    }
-                })
-
-                .then(function () {
-                    self._updateThreads();
-                    self._startListening();
-                    self._threadWidget.$el.on(
-                        "scroll",
-                        null,
-                        _.debounce(function () {
-                            var $noContent = self._threadWidget.$(".o_mail_no_content");
-                            if (
-                                self._threadWidget.getScrolltop() < 20 &&
-                                !self._thread.isAllHistoryLoaded() &&
-                                !$noContent.length
-                            ) {
-                                self._loadMoreMessages();
-                            }
-                            if (self._threadWidget.isAtBottom()) {
-                                self._thread.markAsRead();
-                            }
-                        }, 100)
-                    );
-                });
-        },
-        _startListening: function () {
-            this.call("mail_service", "getMailBus").on(
-                "new_message",
-                this,
-                this._onNewMessage
-            );
-        },
-        _setThread: function (threadID) {
-            this._storeThreadState();
-            var thread = this.call("mail_service", "getThread", threadID);
-            if (!thread) {
-                return;
-            }
-            this._thread = thread;
-
-            var self = this;
-            this.messagesSeparatorPosition = undefined;
-            return this._fetchAndRenderThread().then(function () {
-                self._thread.markAsRead();
-                // Restore scroll position and composer of the new
-                // current thread
-                self._restoreThreadState();
-
-                // Update control panel before focusing the composer, otherwise
-                // focus is on the searchview
-                self.set("title", self._thread.getTitle());
-
-                self.action_manager.do_push_state({
-                    action: self.action.id,
-                    active_id: self._thread.getID(),
-                });
-            });
-        },
-        _storeThreadState: function () {
-            if (this._thread) {
-                this._threadsScrolltop[
-                    this._thread.getID()
-                ] = this._threadWidget.getScrolltop();
-            }
-        },
-        _loadEnoughMessages: function () {
-            var $el = this._threadWidget.el;
-            var loadMoreMessages =
-                $el.clientHeight &&
-                $el.clientHeight === $el.scrollHeight &&
-                !this._thread.isAllHistoryLoaded();
-            if (loadMoreMessages) {
-                return this._loadMoreMessages().then(
-                    this._loadEnoughMessages.bind(this)
-                );
-            }
-        },
-        _getThreadRenderingOptions: function () {
-            if (_.isUndefined(this.messagesSeparatorPosition)) {
-                if (this._unreadCounter) {
-                    var messageID = this._thread.getLastSeenMessageID();
-                    this.messagesSeparatorPosition = messageID || "top";
-                } else {
-                    // No unread message -> don't display separator
-                    this.messagesSeparatorPosition = false;
-                }
-            }
-            return {
-                displayLoadMore: !this._thread.isAllHistoryLoaded(),
-                squashCloseMessages: true,
-                messagesSeparatorPosition: this.messagesSeparatorPosition,
-                displayEmailIcons: false,
-                displayReplyIcons: false,
-                displayBottomThreadFreeSpace: true,
-                displayModerationCommands: false,
-                displayMarkAsRead: false,
-                displayDocumentLinks: false,
-                displayStars: false,
-            };
-        },
-        _fetchAndRenderThread: function () {
-            var self = this;
-            return this._thread.fetchMessages().then(function () {
-                self._threadWidget.render(
-                    self._thread,
-                    self._getThreadRenderingOptions()
-                );
-                return self._loadEnoughMessages();
-            });
-        },
-        _renderButtons: function () {
-            // This is a hook just in case some buttons are required
-        },
-        _renderThread: function () {
-            this._threadWidget = new ThreadWidget(this, {
-                areMessageAttachmentsDeletable: false,
-                loadMoreOnScroll: true,
-            });
-            this._threadWidget.on("load_more_messages", this, this._loadMoreMessages);
-            return this._threadWidget.appendTo(this.$(".o_mail_discuss_content"));
-        },
+        //        Start: function () {
+        //            var self = this;
+        //
+        //            return this._super.apply(this, arguments).then(function () {
+        //                return self._initRender();
+        //            });
+        //            /*
+        //            Return this.alive($.when.apply($, defs))
+        //                .then(function() {
+        //                    if (self._defaultChatID) {
+        //                        return self.alive(self._setThread(self._defaultChatID));
+        //                    }
+        //                })
+        //
+        //                .then(function() {
+        //                    self._updateThreads();
+        //                    self._startListening();
+        //                    self._threadWidget.$el.on(
+        //                        "scroll",
+        //                        null,
+        //                        _.debounce(function() {
+        //                            var $noContent = self._threadWidget.$(".o_mail_no_content");
+        //                            if (
+        //                                self._threadWidget.getScrolltop() < 20 &&
+        //                                !self._thread.isAllHistoryLoaded() &&
+        //                                !$noContent.length
+        //                            ) {
+        //                                self._loadMoreMessages();
+        //                            }
+        //                            if (self._threadWidget.isAtBottom()) {
+        //                                self._thread.markAsRead();
+        //                            }
+        //                        }, 100)
+        //                    );
+        //                });
+        //            */
+        //        },
+        //        _initRender: function () {
+        //            var self = this;
+        //            this._basicComposer = new BasicComposer(this, {
+        //                mentionPartnersRestricted: true,
+        //            });
+        //            this._extendedComposer = new ExtendedComposer(this, {
+        //                mentionPartnersRestricted: true,
+        //            });
+        //            this._basicComposer
+        //                .on("post_message", this, this._onPostMessage)
+        //                .on("input_focused", this, this._onComposerFocused);
+        //            this._extendedComposer
+        //                .on("post_message", this, this._onPostMessage)
+        //                .on("input_focused", this, this._onComposerFocused);
+        //            this._renderButtons();
+        //
+        //            var defs = [];
+        //
+        //            defs.push(this._renderThread());
+        //            defs.push(this._basicComposer.appendTo(this.$(".o_mail_discuss_content")));
+        //            return Promise.all(defs)
+        //                .then(function () {
+        //                    if (self._defaultChatID) {
+        //                        return self._setThread(self._defaultChatID);
+        //                    }
+        //                })
+        //
+        //                .then(function () {
+        //                    self._updateThreads();
+        //                    self._startListening();
+        //                    self._threadWidget.$el.on(
+        //                        "scroll",
+        //                        null,
+        //                        _.debounce(function () {
+        //                            var $noContent = self._threadWidget.$(".o_mail_no_content");
+        //                            if (
+        //                                self._threadWidget.getScrolltop() < 20 &&
+        //                                !self._thread.isAllHistoryLoaded() &&
+        //                                !$noContent.length
+        //                            ) {
+        //                                self._loadMoreMessages();
+        //                            }
+        //                            if (self._threadWidget.isAtBottom()) {
+        //                                self._thread.markAsRead();
+        //                            }
+        //                        }, 100)
+        //                    );
+        //                });
+        //        },
+        //        _startListening: function () {
+        //            this.call("mail_service", "getMailBus").on(
+        //                "new_message",
+        //                this,
+        //                this._onNewMessage
+        //            );
+        //        },
+        //        _setThread: function (threadID) {
+        //            this._storeThreadState();
+        //            var thread = this.call("mail_service", "getThread", threadID);
+        //            if (!thread) {
+        //                return;
+        //            }
+        //            this._thread = thread;
+        //
+        //            var self = this;
+        //            this.messagesSeparatorPosition = undefined;
+        //            return this._fetchAndRenderThread().then(function () {
+        //                self._thread.markAsRead();
+        //                // Restore scroll position and composer of the new
+        //                // current thread
+        //                self._restoreThreadState();
+        //
+        //                // Update control panel before focusing the composer, otherwise
+        //                // focus is on the searchview
+        //                self.set("title", self._thread.getTitle());
+        //
+        //                self.action_manager.do_push_state({
+        //                    action: self.action.id,
+        //                    active_id: self._thread.getID(),
+        //                });
+        //            });
+        //        },
+        //        _storeThreadState: function () {
+        //            if (this._thread) {
+        //                this._threadsScrolltop[
+        //                    this._thread.getID()
+        //                ] = this._threadWidget.getScrolltop();
+        //            }
+        //        },
+        //        _loadEnoughMessages: function () {
+        //            var $el = this._threadWidget.el;
+        //            var loadMoreMessages =
+        //                $el.clientHeight &&
+        //                $el.clientHeight === $el.scrollHeight &&
+        //                !this._thread.isAllHistoryLoaded();
+        //            if (loadMoreMessages) {
+        //                return this._loadMoreMessages().then(
+        //                    this._loadEnoughMessages.bind(this)
+        //                );
+        //            }
+        //        },
+        //        _getThreadRenderingOptions: function () {
+        //            if (_.isUndefined(this.messagesSeparatorPosition)) {
+        //                if (this._unreadCounter) {
+        //                    var messageID = this._thread.getLastSeenMessageID();
+        //                    this.messagesSeparatorPosition = messageID || "top";
+        //                } else {
+        //                    // No unread message -> don't display separator
+        //                    this.messagesSeparatorPosition = false;
+        //                }
+        //            }
+        //            return {
+        //                displayLoadMore: !this._thread.isAllHistoryLoaded(),
+        //                squashCloseMessages: true,
+        //                messagesSeparatorPosition: this.messagesSeparatorPosition,
+        //                displayEmailIcons: false,
+        //                displayReplyIcons: false,
+        //                displayBottomThreadFreeSpace: true,
+        //                displayModerationCommands: false,
+        //                displayMarkAsRead: false,
+        //                displayDocumentLinks: false,
+        //                displayStars: false,
+        //            };
+        //        },
+        //        _fetchAndRenderThread: function () {
+        //            var self = this;
+        //            return this._thread.fetchMessages().then(function () {
+        //                self._threadWidget.render(
+        //                    self._thread,
+        //                    self._getThreadRenderingOptions()
+        //                );
+        //                return self._loadEnoughMessages();
+        //            });
+        //        },
+        //        _renderButtons: function () {
+        //            // This is a hook just in case some buttons are required
+        //        },
+        //        _renderThread: function () {
+        //            this._threadWidget = new ThreadWidget(this, {
+        //                areMessageAttachmentsDeletable: false,
+        //                loadMoreOnScroll: true,
+        //            });
+        //            this._threadWidget.on("load_more_messages", this, this._loadMoreMessages);
+        //            return this._threadWidget.appendTo(this.$(".o_mail_discuss_content"));
+        //        },
         _renderSidebar: function (options) {
             var $sidebar = $(
                 QWeb.render("mail_broker.broker.Sidebar", {
