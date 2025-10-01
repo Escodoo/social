@@ -19,7 +19,7 @@ class MailThread(models.AbstractModel):
             result["name"] = partner.display_name
         return result
 
-    def _telegram_get_channel(self, field_name, gateway, telegram_user_id):
+    def _telegram_get_channel(self, gateway, telegram_user_id):
         partner = self._telegram_get_partner()
         if not partner:
             raise UserError(_("No partner found for this record"))

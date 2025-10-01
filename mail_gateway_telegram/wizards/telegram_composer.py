@@ -12,7 +12,6 @@ class TelegramComposer(models.TransientModel):
 
     res_model = fields.Char("Document Model Name")
     res_id = fields.Integer("Document ID")
-    number_field_name = fields.Char()
     find_gateway = fields.Boolean()
     gateway_id = fields.Many2one(
         "mail.gateway", domain=[("gateway_type", "=", "telegram")], required=True
@@ -38,9 +37,7 @@ class TelegramComposer(models.TransientModel):
         record = self.env[self.res_model].browse(self.res_id)
         if not record:
             return
-        channel = record._telegram_get_channel(
-            self.number_field_name, self.gateway_id, self.telegram_user_id
-        )
+        channel = record._telegram_get_channel(self.gateway_id, self.telegram_user_id)
         channel.message_post(
             body=self.body, subtype_xmlid="mail.mt_comment", message_type="comment"
         )
@@ -50,9 +47,7 @@ class TelegramComposer(models.TransientModel):
         record = self.env[self.res_model].browse(self.res_id)
         if not record:
             return
-        channel = record._telegram_get_channel(
-            self.number_field_name, self.gateway_id, self.telegram_user_id
-        )
+        channel = record._telegram_get_channel(self.gateway_id, self.telegram_user_id)
         if channel:
             return {
                 "type": "ir.actions.client",

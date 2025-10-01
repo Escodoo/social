@@ -26,7 +26,6 @@ export class SendTelegramButton extends Component {
                     ...this.user.context,
                     default_res_model: this.props.record.resModel,
                     default_res_id: this.props.record.resId,
-                    default_number_field_name: this.props.name,
                     default_composition_mode: "comment",
                 },
             },

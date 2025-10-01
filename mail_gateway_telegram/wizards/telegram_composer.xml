@@ -16,7 +16,6 @@
                     <field name="find_gateway" invisible="1" />
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
-                    <field name="number_field_name" invisible="1" />
                     <field
                         name="telegram_user_id"
                         placeholder="Enter Telegram User ID"
