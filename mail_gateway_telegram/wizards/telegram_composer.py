@@ -19,7 +19,7 @@ class TelegramComposer(models.TransientModel):
     body = fields.Text("Message")
     telegram_user_id = fields.Char(
         "Telegram User ID",
-        required=True,
+        # required=True,
         help="The Telegram user ID to send the message to. "
         "This can be found when the user contacts you via Telegram.",
     )
