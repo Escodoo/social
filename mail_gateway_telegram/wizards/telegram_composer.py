@@ -18,6 +18,12 @@ class TelegramComposer(models.TransientModel):
         "mail.gateway", domain=[("gateway_type", "=", "telegram")], required=True
     )
     body = fields.Text("Message")
+    telegram_user_id = fields.Char(
+        "Telegram User ID",
+        required=True,
+        help="The Telegram user ID to send the message to. "
+        "This can be found when the user contacts you via Telegram.",
+    )
 
     @api.model
     def default_get(self, fields):
@@ -32,7 +38,9 @@ class TelegramComposer(models.TransientModel):
         record = self.env[self.res_model].browse(self.res_id)
         if not record:
             return
-        channel = record._telegram_get_channel(self.number_field_name, self.gateway_id)
+        channel = record._telegram_get_channel(
+            self.number_field_name, self.gateway_id, self.telegram_user_id
+        )
         channel.message_post(
             body=self.body, subtype_xmlid="mail.mt_comment", message_type="comment"
         )
@@ -42,7 +50,9 @@ class TelegramComposer(models.TransientModel):
         record = self.env[self.res_model].browse(self.res_id)
         if not record:
             return
-        channel = record._telegram_get_channel(self.number_field_name, self.gateway_id)
+        channel = record._telegram_get_channel(
+            self.number_field_name, self.gateway_id, self.telegram_user_id
+        )
         if channel:
             return {
                 "type": "ir.actions.client",
@@ -55,7 +65,5 @@ class TelegramComposer(models.TransientModel):
         self.ensure_one()
         if not self.body:
             raise UserError(_("Body is required"))
-        if not self.gateway_id:
-            raise UserError(_("No Telegram gateway configured"))
         self._action_send_telegram()
         return False

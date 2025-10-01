@@ -339,21 +339,40 @@ class MailGatewayTelegramService(models.AbstractModel):
             self.env.cr.commit()
 
     def _get_author_vals(self, gateway, update):
-        names = []
-        for name in [
-            update.message.from_user.first_name or False,
-            update.message.from_user.last_name or False,
-        ]:
-            if name:
-                names.append(name)
-        return {
-            "name": " ".join(names),
-            "gateway_id": gateway.id,
-            "gateway_token": str(update.message.from_user.id),
-        }
+        # Check if update is a dict (from composer) or Update object (from webhook)
+        if isinstance(update, dict):
+            author_id = update.get("messages")[0].get("from")
+            for contact in update.get("contacts", []):
+                if contact["telegram_id"] == author_id:
+                    return {
+                        "name": contact.get("profile", {}).get("name", "Anonymous"),
+                        "gateway_id": gateway.id,
+                        "gateway_token": str(author_id),
+                    }
+        else:
+            # Handle Telegram Update object from webhook
+            author_id = update.message.from_user.id
+            names = []
+            for name in [
+                update.message.from_user.first_name or False,
+                update.message.from_user.last_name or False,
+            ]:
+                if name:
+                    names.append(name)
+            return {
+                "name": " ".join(names) or f"Telegram User {author_id}",
+                "gateway_id": gateway.id,
+                "gateway_token": str(author_id),
+            }
 
     def _get_author(self, gateway, update):
-        author_id = update.message.from_user.id
+        # Check if update is a dict (from composer) or Update object (from webhook)
+        if isinstance(update, dict):
+            author_id = update.get("messages")[0].get("from")
+        else:
+            # Handle Telegram Update object from webhook
+            author_id = update.message.from_user.id
+
         if author_id:
             gateway_partner = self.env["res.partner.gateway.channel"].search(
                 [
@@ -363,6 +382,19 @@ class MailGatewayTelegramService(models.AbstractModel):
             )
             if gateway_partner:
                 return gateway_partner.partner_id
+            partner = self.env["res.partner"].search(
+                [("phone_sanitized", "=", "+" + str(author_id))]
+            )
+            if partner:
+                self.env["res.partner.gateway.channel"].create(
+                    {
+                        "name": gateway.name,
+                        "partner_id": partner.id,
+                        "gateway_id": gateway.id,
+                        "gateway_token": str(author_id),
+                    }
+                )
+                return partner
             guest = self.env["mail.guest"].search(
                 [
                     ("gateway_id", "=", gateway.id),
@@ -371,9 +403,11 @@ class MailGatewayTelegramService(models.AbstractModel):
             )
             if guest:
                 return guest
-            return self.env["mail.guest"].create(self._get_author_vals(gateway, update))
+            author_vals = self._get_author_vals(gateway, update)
+            if author_vals:
+                return self.env["mail.guest"].create(author_vals)
 
-        return super()._get_author(gateway, update)
+        return False
 
     async def _async_update_content_after_hook(self, channel, message):
         bot = self._get_telegram_bot(channel.gateway_id.token)

@@ -4,8 +4,6 @@
 from odoo import _, models
 from odoo.exceptions import UserError
 
-from odoo.addons.phone_validation.tools import phone_validation
-
 
 class MailThread(models.AbstractModel):
 
@@ -21,50 +19,39 @@ class MailThread(models.AbstractModel):
             result["name"] = partner.display_name
         return result
 
-    def _telegram_get_channel(self, field_name, gateway):
-        phone = self[field_name]
-        sanitize_res = phone_validation.phone_sanitize_numbers_w_record([phone], self)
-        sanitized_number = sanitize_res[phone].get("sanitized")
-        if not sanitized_number:
-            raise UserError(_("Phone cannot be sanitized"))
-        sanitized_number = sanitized_number[1:]
+    def _telegram_get_channel(self, field_name, gateway, telegram_user_id):
         partner = self._telegram_get_partner()
         if not partner:
             raise UserError(_("No partner found for this record"))
 
-        # Check if channel exists for this partner and gateway
-        existing_channel = self.env["res.partner.gateway.channel"].search(
+        # Check if channel exists for this partner and gateway with the telegram user ID
+        if not self.env["res.partner.gateway.channel"].search(
             [
                 ("partner_id", "=", partner.id),
                 ("gateway_id", "=", gateway.id),
+                ("gateway_token", "=", str(telegram_user_id)),
             ]
-        )
-
-        if not existing_channel:
-            # Create new channel if none exists
+        ):
             self.env["res.partner.gateway.channel"].create(
                 {
                     "name": gateway.name,
                     "partner_id": partner.id,
                     "gateway_id": gateway.id,
-                    "gateway_token": sanitized_number,
+                    "gateway_token": str(telegram_user_id),
                 }
             )
-        else:
-            # Update existing channel with new token if different
-            if existing_channel.gateway_token != sanitized_number:
-                existing_channel.write({"gateway_token": sanitized_number})
+
         return self.env["mail.gateway.telegram"]._get_channel(
             gateway,
-            sanitized_number,
+            str(telegram_user_id),
             {
                 "contacts": [
                     {
-                        "telegram_id": sanitized_number,
+                        "telegram_id": str(telegram_user_id),
                         "profile": {"name": partner.display_name},
                     }
                 ],
-                "messages": [{"from": sanitized_number}],
+                "messages": [{"from": str(telegram_user_id)}],
             },
             force_create=True,
         )
