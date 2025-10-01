@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2024 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="telegram_composer_form_view">
+        <field name="name">telegram.composer.form (in mail_gateway_telegram)</field>
+        <field name="model">telegram.composer</field>
+        <field name="arch" type="xml">
+            <form string="Telegram Composer">
+                <group>
+                    <field
+                        name="gateway_id"
+                        attrs="{'invisible': [('find_gateway', '=', False)]}"
+                    />
+                    <field name="find_gateway" invisible="1" />
+                    <field name="res_model" invisible="1" />
+                    <field name="res_id" invisible="1" />
+                    <field name="number_field_name" invisible="1" />
+                    <field name="body" />
+                </group>
+                <footer>
+                    <button
+                        name="action_send_telegram"
+                        string="Send"
+                        class="btn-primary"
+                        icon="fa-telegram"
+                        type="object"
+                    />
+                    <button
+                        name="action_view_telegram"
+                        string="Show Chat"
+                        type="object"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="telegram_composer_act_window">
+        <field name="name">Send Telegram Message</field>
+        <field name="res_model">telegram.composer</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>

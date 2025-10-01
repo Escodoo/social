@@ -20,6 +20,6 @@ class MailChannel(models.Model):
                 avatar = f.read()
 
             bgcolor = get_hsl_from_seed(self.uuid)
-            avatar = avatar.replace("fill:#875a7b", f"fill:{bgcolor}")
+            avatar = avatar.replace("fill:#875a7b", f"fill: {bgcolor}")
             return avatar
         return super()._generate_avatar_gateway()
