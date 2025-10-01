@@ -24,7 +24,7 @@
                         name="action_send_telegram"
                         string="Send"
                         class="btn-primary"
-                        icon="fa-telegram"
+                        icon="fa-paper-plane"
                         type="object"
                     />
                     <button

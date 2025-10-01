@@ -19,8 +19,6 @@
     "assets": {
         "mail.assets_messaging": [
             "mail_gateway_telegram/static/src/models/**/*.js",
-            "mail_gateway_telegram/static/src/components/**/*.js",
-            "mail_gateway_telegram/static/src/components/**/*.xml",
         ],
         "web.assets_backend": [
             "mail_gateway_telegram/static/src/components/**/*.js",
